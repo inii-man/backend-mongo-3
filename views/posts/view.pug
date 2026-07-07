@@ -1,0 +1,99 @@
+extends ../layout
+
+block content
+  h2= post.title
+  p Author: 
+    a(href=`/users/${post.author.shortId}/posts`)= post.author.name
+  p= post.content
+
+  hr
+  h3 Comments
+  
+  //- The table where comments will be dynamically injected via CSR
+  table
+    thead
+      tr
+        //- Input field to type a new comment
+        td(colspan="2")
+          input#content(type="text" placeholder="Write a comment...")
+        //- Button to submit the comment
+        td
+          button(onclick="writeComment()") Write a comment
+    //- The tbody where the fetched comments will be rendered
+    tbody#comments
+  
+  //- HTML Template to define the structure of a single comment
+  //- This is not displayed in the browser directly; JavaScript uses it to create new rows
+  template#comment-template
+    tr
+      td.content
+      td.author
+      td.createdAt
+
+  //- CSR logic using fetch API
+  script.
+    // Call loadComments immediately when the script executes (page load)
+    loadComments();
+
+    // Function to fetch and display comments
+    function loadComments() {
+      // Clear the current comments list to prevent duplication
+      document.querySelector('#comments').innerHTML = '';
+      
+      // Fetch the list of comments from the API endpoint
+      fetch('/api/posts/#{post.shortId}/comments')
+        .then((res) => {
+          if (res.ok) {
+            return res.json(); // Parse the JSON response
+          } else {
+            throw new Error('Failed to load comments');
+          }
+        })
+        .then((comments) => {
+          // For each comment in the array, call addComment
+          comments.forEach(addComment);
+        })
+        .catch((err) => alert(err.message)); // Display error if fetch fails
+    }
+
+    // Function to add a single comment to the DOM using the HTML Template
+    function addComment(comment) {
+      // Find the template element
+      const template = document.querySelector('#comment-template');
+      // Import the template's content as a new node
+      const node = document.importNode(template.content, true);
+      
+      // Set the content
+      node.querySelector('.content').textContent = comment.content;
+      // Set the author's name
+      node.querySelector('.author').textContent = comment.author.name;
+      // Set the creation date (format it simply)
+      node.querySelector('.createdAt').textContent = new Date(comment.createdAt).toLocaleString();
+      
+      // Append the new node to the comments tbody
+      document.querySelector('#comments').appendChild(node);
+    }
+
+    // Function to submit a new comment
+    function writeComment() {
+      // Get the input element and its value
+      const input = document.querySelector('#content');
+      const content = input.value;
+      
+      if (!content) return; // Don't submit empty comments
+      
+      // Send a POST request to the API to create the comment
+      fetch('/api/posts/#{post.shortId}/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content }), // Send the content as JSON
+      })
+      .then((res) => {
+        if (res.ok) {
+          input.value = ''; // Clear the input field on success
+          loadComments(); // Re-fetch and re-render the comments list
+        } else {
+          alert('An error has occurred.');
+        }
+      });
+    }

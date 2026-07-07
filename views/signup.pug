@@ -1,0 +1,55 @@
+extends layout
+
+block content
+  h2 Sign Up
+  //- Registration form sends a POST request to /join
+  //- 'return check()' triggers the client-side validation script before submitting
+  form(action="/join" method="post" onsubmit="return check()")
+    table
+      tbody
+        tr
+          td Email
+          td: input(type="text" name="email")
+        tr
+          td Name
+          td: input(type="text" name="name")
+        tr
+          td Password
+          td: input(type="password" name="password")
+        tr
+          td Password Confirmation
+          td: input(type="password" name="password_confirm")
+        tr
+          td(colspan="2")
+            input(type="submit" value="Sign Up")
+
+  //- Client-side validation script
+  script.
+    function check() {
+      // Get the value of the email input
+      const email = document.querySelector('[name="email"]').value;
+      // Validate email format using Regular Expression
+      if (!/^\\S+@\\S+\\.\\S+$/.test(email)) {
+        alert('The email format is invalid.');
+        return false; // Prevent form submission
+      }
+      
+      // Get the value of the password input
+      const password = document.querySelector('[name="password"]').value;
+      // Ensure password is at least 8 characters long
+      if (password.length < 8) {
+        alert("Please set a password of at least 8 characters.");
+        return false;
+      }
+      
+      // Get the value of the password confirmation input
+      const passwordConfirm = document.querySelector('[name="password_confirm"]').value;
+      // Verify if both passwords match
+      if (password != passwordConfirm) {
+        alert('The password confirmation does not match.');
+        return false;
+      }
+      
+      // If all validations pass, allow form submission
+      return true;
+    }

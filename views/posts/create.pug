@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  h2 Create Post
+  form(action="/posts" method="post")
+    table
+      tbody
+        tr
+          td Title
+          td: input(type="text" name="title" required)
+        tr
+          td Content
+          td: textarea(name="content" required)
+        tr
+          td(colspan="2")
+            input(type="submit" value="Create Post")

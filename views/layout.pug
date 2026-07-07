@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title= title || 'Playground'
+    style.
+      body { font-family: sans-serif; padding: 20px; }
+      nav { margin-bottom: 20px; }
+      nav a { margin-right: 10px; }
+      table { border-collapse: collapse; margin-bottom: 20px; }
+      th, td { border: 1px solid #ddd; padding: 8px; }
+  body
+    nav
+      a(href="/") Home
+      a(href="/posts") Posts
+      if user
+        a(href=`/users/${user.shortId}/posts`) My Posts
+        a(href="/logout") Logout (#{user.name})
+      else
+        a(href="/auth") Login
+        a(href="/join") Sign Up
+    hr
+    block content

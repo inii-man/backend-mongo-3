@@ -1,0 +1,32 @@
+extends ../layout
+
+block content
+  //- Check if we are viewing a specific user's posts, or all posts
+  //- This demonstrates reusing the list screen for different contexts
+  h2= profileUser ? `${profileUser.name}'s posts` : "All posts"
+  
+  if user
+    a(href="/posts/create") Create New Post
+    br
+    br
+
+  table
+    thead
+      tr
+        th Title
+        th Author
+        th Actions
+    tbody
+      each post in posts
+        tr
+          td= post.title
+          td
+            //- Link to the author's specific posts list page
+            //- Utilizing the author's shortId which was retrieved via populate()
+            a(href=`/users/${post.author.shortId}/posts`)= post.author.name
+          td
+            a(href=`/posts/${post.shortId}`) View
+            if user && post.author.shortId === user.shortId
+              //- Only show delete button if the logged-in user is the author
+              form(action=`/posts/${post.shortId}/delete` method="post" style="display:inline;")
+                input(type="submit" value="Delete")

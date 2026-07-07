@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  h2 Login
+  //- Login form sends a POST request to /auth
+  //- 'return check()' triggers the client-side validation script before submitting
+  form(action="/auth" method="post" onsubmit="return check()")
+    table
+      tbody
+        tr
+          td Email
+          td: input(type="text" name="email")
+        tr
+          td Password
+          td: input(type="password" name="password")
+        tr
+          td(colspan="2") 
+            input(type="submit" value="Login")
+
+  //- Client-side validation script
+  script.
+    function check() {
+      // Get email input
+      const email = document.querySelector('[name="email"]').value;
+      if (!email) {
+        alert("Please enter your email.");
+        return false; // Prevent form submission
+      }
+      
+      // Get password input
+      const password = document.querySelector('[name="password"]').value;
+      // Check if password is empty (The PDF mistakenly checks !email again, but this is fixed here)
+      if (!password) {
+        alert("Please enter your password.");
+        return false;
+      }
+      
+      return true;
+    }

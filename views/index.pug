@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1 Node.js and MongoDB II Playground
+  p Welcome to the playground! 
+  p This app demonstrates:
+  ul
+    li Membership Registration (Hashing with SHA1)
+    li Passport.js Authentication (Local Strategy)
+    li Session Store using MongoDB (connect-mongo)
+    li Linking Members and Posts
+    li Client-Side Rendering (CSR) for Comments
+    li MongoDB Aggregation Pipeline
+  
+  if !user
+    p You are not logged in.
+  else
+    p You are logged in as #{user.email}.
