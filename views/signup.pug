@@ -29,7 +29,7 @@ block content
       // Get the value of the email input
       const email = document.querySelector('[name="email"]').value;
       // Validate email format using Regular Expression
-      if (!/^\\S+@\\S+\\.\\S+$/.test(email)) {
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
         alert('The email format is invalid.');
         return false; // Prevent form submission
       }
