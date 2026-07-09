@@ -6,7 +6,7 @@ const User = require('../models/User');
 // Middleware to check if user is logged in before allowing them to post a comment
 function loginRequired(req, res, next) {
   if (!req.user) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ error: 'Unauthorizedd' });
   }
   next();
 }
@@ -17,7 +17,7 @@ router.post('/posts/:shortId/comments', loginRequired, async (req, res, next) =>
   try {
     const { shortId } = req.params;
     const { content } = req.body;
-    
+
     // Find the full User document of the currently logged-in user
     const author = await User.findOne({ shortId: req.user.shortId });
     if (!author) {
@@ -28,13 +28,13 @@ router.post('/posts/:shortId/comments', loginRequired, async (req, res, next) =>
     // This allows simultaneous requests to be processed accurately without race conditions
     await Post.updateOne(
       { shortId },
-      { 
-        $push: { 
-          comments: { 
-            content, 
-            author: author._id 
-          } 
-        } 
+      {
+        $push: {
+          comments: {
+            content,
+            author: author._id
+          }
+        }
       }
     );
 
@@ -49,7 +49,7 @@ router.post('/posts/:shortId/comments', loginRequired, async (req, res, next) =>
 router.get('/posts/:shortId/comments', async (req, res, next) => {
   try {
     const { shortId } = req.params;
-    
+
     // Find the post
     const post = await Post.findOne({ shortId });
     if (!post) {
