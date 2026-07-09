@@ -15,7 +15,7 @@ mongoose.connect('mongodb://localhost:27017/backend_mongo_3_db', {
   useUnifiedTopology: true // Use new Server Discover and Monitoring engine
 });
 mongoose.connection.on('connected', () => {
-  console.log('Successfullyy connected to MongoDB'); // Log successful connection
+  console.log('Successfully connected to MongoDB'); // Log successful connection
 });
 
 // Configure Pug as the template engine
